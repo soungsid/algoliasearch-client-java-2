@@ -1,0 +1,102 @@
+ 
+entity Tags
+{
+	libelle String
+    code String  
+}
+
+entity Categorie
+{
+    code String
+	libelle String 
+}
+
+
+
+entity Qcm  {
+	name String,
+    nbQuestion Short  
+    idCategorie Categorie
+}
+
+entity QcmQuestion  {
+	libelle String
+    idQcm Qcm
+}
+entity QcmReponse  {
+	libelle String
+    idQcmQuestion QcmQuestion
+    correct Boolean 
+}
+
+entity QcmTest
+{
+	dateDebut Instant
+    dateFin Instant
+    idQcm Qcm
+    idUtilisateur Utilisateur
+    email String 
+    score Double
+    highScore Double
+}
+
+entity QcmTestResponse
+{
+	idQcmTest QcmTest
+	idQcmQuestion QcmQuestion
+    idQcmReponse QcmReponse
+    dateSoumission Instant
+}
+
+entity Utilisateur {
+	lastname String,
+    firstname String, 
+    email String, 
+    linkedin String, 
+    googleplus String, 
+    role String
+    idCountry Country
+}
+
+
+entity Country {
+	libelle String
+    code String
+}
+relationship ManyToMany 
+{
+	QcmQuestion to Tag
+}
+
+relationship OneToMany {
+	Qcm{createBy} to Utilisateur
+    Qcm{idCategorie} to Categorie
+    QcmQuestion {idQcm} to Qcm
+    
+    
+    QcmReponse{idQcmQuestion} to QcmQuestion
+    QcmTestResponse{idQcmTest} to QcmTest
+	QcmTestResponse{idQcmQuestion} to QcmQuestion
+    QcmTestResponse{idQcmReponse} to QcmReponse 
+    QcmTest{idQcm} to  Qcm
+    QcmTest{idUtilisateur} to  Utilisateur
+    
+    Utilisateur{idCountry} to Country
+}
+
+ 
+
+  
+
+// Set pagination options
+paginate all with infinite-scroll
+//paginate Job with pagination
+
+// Use Data Transfert Objects (DTO)
+ dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl
+
+// Set an angular suffix
+// angularSuffix * with mySuffix
